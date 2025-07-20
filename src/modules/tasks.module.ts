@@ -4,6 +4,7 @@ import { CreateTaskUseCase } from 'src/@core/application/task/use-cases/create-t
 import { ITaskRepository } from 'src/@core/domain/task';
 import { TaskRepository } from 'src/infra/adapters/task/tasks.prisma.respository';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
+import { FindTasksByUserIdUseCase } from 'src/@core/application/task/use-cases/find-all-task.use-case';
 
 @Module({
   controllers: [TasksController],
@@ -14,6 +15,12 @@ import { PrismaService } from 'src/infra/prisma/prisma.service';
       provide: CreateTaskUseCase,
       useFactory: (taskRepository: ITaskRepository) =>
         new CreateTaskUseCase(taskRepository),
+      inject: ['ITaskRepository'],
+    },
+    {
+      provide: FindTasksByUserIdUseCase,
+      useFactory: (taskRepository: ITaskRepository) =>
+        new FindTasksByUserIdUseCase(taskRepository),
       inject: ['ITaskRepository'],
     },
   ],
