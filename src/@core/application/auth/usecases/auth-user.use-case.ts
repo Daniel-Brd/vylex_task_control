@@ -1,4 +1,4 @@
-import { AuthTokenDto } from 'src/@core/contracts/auth/auth-token.dto';
+import { AuthTokenOutputDto } from 'src/@core/contracts/auth/auth-token.dto';
 import { IAuthTokenGenerator } from 'src/@core/domain/auth/auth-token.port';
 import { IPasswordHasher } from 'src/@core/domain/auth/password-hasher.port';
 import { IUserRepository } from 'src/@core/domain/user';
@@ -12,7 +12,7 @@ export class AuthenticateUserUseCase {
     private readonly authTokenGenerator: IAuthTokenGenerator,
   ) {}
 
-  async execute(command: AuthUserCommand): Promise<AuthTokenDto> {
+  async execute(command: AuthUserCommand): Promise<AuthTokenOutputDto> {
     const { email, password } = command;
     const user = await this.usersRepository.findByEmail(email);
 
