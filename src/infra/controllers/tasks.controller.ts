@@ -1,4 +1,5 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { CreateTaskCommand } from 'src/@core/application/task/commands/create-task.command';
 import { CreateTaskUseCase } from 'src/@core/application/task/use-cases/create-task.use-case';
 import {
@@ -13,12 +14,15 @@ export class TasksController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() dto: CreateTaskInputDto): Promise<CreateTaskOutputDto> {
+  async create(
+    @Body() dto: CreateTaskInputDto,
+    @Req() req: AuthRequest,
+  ): Promise<CreateTaskOutputDto> {
     const command: CreateTaskCommand = {
       description: dto.description,
       dueDate: dto.dueDate,
       title: dto.title,
-      userId: '5bd21e8a-8df0-48bd-bef2-21e7aaa61e2b',
+      userId: req.user.userId,
     };
 
     return this.createTaskUseCase.execute(command);
