@@ -30,7 +30,6 @@ import { IPasswordHasher } from 'src/@core/domain/auth/password-hasher.port';
   ],
   controllers: [AuthController],
   providers: [
-    AuthenticateUserUseCase,
     JwtStrategy,
     {
       provide: 'IPasswordHasher',
