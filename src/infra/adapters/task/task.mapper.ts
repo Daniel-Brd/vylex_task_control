@@ -16,4 +16,19 @@ export class TaskMapper {
 
     return data;
   }
+
+  public static toDomain(prismaTask: PrismaTask): Task {
+    const task = Task.reconstitute({
+      id: prismaTask.id,
+      userId: prismaTask.userId,
+      title: prismaTask.title,
+      description: prismaTask.description,
+      status: prismaTask.status as Task['status'],
+      dueDate: prismaTask.dueDate,
+      createdAt: prismaTask.createdAt,
+      completedAt: prismaTask.completedAt,
+    });
+
+    return task;
+  }
 }
