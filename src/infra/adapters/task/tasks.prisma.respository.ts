@@ -18,8 +18,8 @@ export class TaskRepository implements ITaskRepository {
 
   async findAllByUserId(
     userId: string,
-    filters: TaskFilters,
-    orderByParams: TaskOrderBy,
+    filters?: TaskFilters,
+    orderByParams?: TaskOrderBy,
   ): Promise<Task[]> {
     const where = this.createWhereConditions({ ...filters, userId });
     const orderBy = this.createOrderBy(orderByParams);
@@ -46,11 +46,9 @@ export class TaskRepository implements ITaskRepository {
   }
 
   protected createOrderBy(
-    orderBy: TaskOrderBy,
+    orderBy: TaskOrderBy | undefined,
   ): Prisma.TaskOrderByWithRelationInput {
-    if (!orderBy?.sortBy || !orderBy?.sortOrder) {
-      return { createdAt: 'desc' };
-    }
+    if (!orderBy) return { createdAt: 'desc' };
 
     const { sortBy, sortOrder, nulls } = orderBy;
 
