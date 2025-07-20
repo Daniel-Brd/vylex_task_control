@@ -10,6 +10,7 @@ export enum NullsOrder {
 
 export enum SortBy {
   CREATED_AT = 'createdAt',
+  COMPLETED_AT = 'completedAt',
   DUE_DATE = 'dueDate',
   STATUS = 'status',
   TITLE = 'title',
