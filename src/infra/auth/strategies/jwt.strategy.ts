@@ -3,6 +3,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { IUserRepository } from 'src/@core/domain/user';
+import { AuthUserPayload } from 'src/@core/contracts/auth/auth-user-payload.dto';
+import { CLIENT_ERROR_CODE, NotFoundError } from 'src/@core/errors/index.error';
 
 type JwtPayload = {
   sub: string;
@@ -25,8 +27,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(payload: JwtPayload): Promise<AuthUserPayload> {
     const user = await this.usersRepository.findById(payload.sub);
-    return { userId: user?.id, name: user?.name, email: user?.email };
+
+    if (!user) {
+      throw new NotFoundError(
+        'Failed to authenticate user. User not found.',
+        CLIENT_ERROR_CODE.USER_NOT_FOUND,
+      );
+    }
+
+    return { userId: user.id, name: user.name, email: user.email };
   }
 }
