@@ -36,4 +36,8 @@ export class User {
       updatedAt: new Date(),
     });
   }
+
+  static reconstitute(props: User): User {
+    return new User(props);
+  }
 }
