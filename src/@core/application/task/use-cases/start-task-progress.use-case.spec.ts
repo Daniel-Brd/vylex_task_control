@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { StartTaskProgressUseCase } from './start-task-progress.use-case';
-import { Task } from 'src/@core/domain/task';
+import { Task, TaskStatus } from 'src/@core/domain/task';
 import { StartTaskProgressCommand } from '../commands/start-task-progress.command';
 import {
   CLIENT_ERROR_CODE,
@@ -8,6 +8,8 @@ import {
   UnauthorizedError,
 } from 'src/@core/errors/index.error';
 import { mockTaskRepository } from './task-repository-test-mocks';
+import { TaskOutputDto } from 'src/@core/contracts/task/task-output.dto';
+import { fail } from 'assert';
 
 describe('StartTaskProgressUseCase', () => {
   let useCase: StartTaskProgressUseCase;
@@ -23,10 +25,16 @@ describe('StartTaskProgressUseCase', () => {
       userId: 'user-id-123',
     };
 
-    it('should successfully start a task progress and call the repository to update it', async () => {
+    it('should successfully start a task progress and return the correct DTO', async () => {
       const mockTask = {
         id: command.taskId,
         userId: command.userId,
+        title: 'Task In Progress',
+        description: 'Description.',
+        status: TaskStatus.IN_PROGRESS,
+        dueDate: new Date('2025-08-01T23:59:59.000Z'),
+        createdAt: new Date('2025-07-20T12:00:00.000Z'),
+        completedAt: null,
         startProgress: jest.fn(),
       } as unknown as Task;
 
@@ -38,7 +46,10 @@ describe('StartTaskProgressUseCase', () => {
       expect(mockTaskRepository.findById).toHaveBeenCalledWith(command.taskId);
       expect(mockTask.startProgress).toHaveBeenCalledTimes(1);
       expect(mockTaskRepository.update).toHaveBeenCalledWith(mockTask);
-      expect(result).toBe(mockTask);
+
+      const expectedDto = TaskOutputDto.fromEntity(mockTask);
+      expect(result).toBeInstanceOf(TaskOutputDto);
+      expect(result).toEqual(expectedDto);
     });
 
     it('should throw NotFoundError domain error if the task to start is not found', async () => {
@@ -46,6 +57,7 @@ describe('StartTaskProgressUseCase', () => {
 
       try {
         await useCase.execute(command);
+        fail('Expected NotFoundError domain error was not thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundError);
         expect(error).toHaveProperty(
@@ -70,7 +82,6 @@ describe('StartTaskProgressUseCase', () => {
 
       try {
         await useCase.execute(command);
-
         fail('Expected UnauthorizedError was not thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(UnauthorizedError);
