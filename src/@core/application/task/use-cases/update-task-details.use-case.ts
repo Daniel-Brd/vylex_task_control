@@ -1,7 +1,7 @@
 import { ITaskRepository } from 'src/@core/domain/task';
 import { CheckTaskUseCase } from './check-task.use-case';
 import { UpdateTaskDetailsCommand } from '../commands/update-task-details.command';
-import { TaskOutputDto } from 'src/@core/contracts/task/update-task-output.dto';
+import { TaskOutputDto } from 'src/@core/contracts/task/task-output.dto';
 
 export class UpdateTaskDetailsUseCase extends CheckTaskUseCase {
   constructor(protected readonly taskRepository: ITaskRepository) {
