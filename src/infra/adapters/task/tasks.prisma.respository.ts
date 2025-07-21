@@ -92,4 +92,8 @@ export class TaskRepository implements ITaskRepository {
       [sortBy]: sortOrder,
     };
   }
+
+  async delete(taskId: string): Promise<void> {
+    await this.prisma.task.delete({ where: { id: taskId } });
+  }
 }

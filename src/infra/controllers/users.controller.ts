@@ -5,11 +5,13 @@ import {
   CreateUserInputDto,
   CreateUserOutputDto,
 } from 'src/@core/contracts/user/create-user.dto';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly createUserUseCase: CreateUserUseCase) {}
 
+  @Public()
   @Post()
   async create(@Body() dto: CreateUserInputDto): Promise<CreateUserOutputDto> {
     const command: CreateUserCommand = {

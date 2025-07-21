@@ -2,15 +2,15 @@ import {
   Controller,
   Post,
   Body,
-  UseGuards,
   Req,
   Get,
   Query,
   Patch,
   Param,
   ParseUUIDPipe,
+  Delete,
+  HttpCode,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { CreateTaskCommand } from 'src/@core/application/task/commands/create-task.command';
 import { UpdateTaskDetailsCommand } from 'src/@core/application/task/commands/update-task-details.command';
 import { CompleteTaskUseCase } from 'src/@core/application/task/use-cases/complete-task.use-case';
@@ -26,7 +26,8 @@ import {
 import { FindAllTasksQueryDto } from 'src/@core/contracts/task/find-all-tasks.dto';
 import { UpdateTaskDetailsInputDto } from 'src/@core/contracts/task/update-task-details.dto';
 import { TaskOutputDto } from 'src/@core/contracts/task/task-output.dto';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { DeleteTaskCommand } from 'src/@core/application/task/commands/delete-task.command';
+import { DeleteTaskUseCase } from 'src/@core/application/task/use-cases/delete-task.use-case';
 
 @Controller('tasks')
 export class TasksController {
@@ -37,10 +38,11 @@ export class TasksController {
     private readonly completeTaskUseCase: CompleteTaskUseCase,
     private readonly reopenTaskUseCase: ReopenTaskUseCase,
     private readonly updateTaskDetailsUseCase: UpdateTaskDetailsUseCase,
+    private readonly deleteTaskUseCase: DeleteTaskUseCase,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
+  @HttpCode(201)
   async create(
     @Body() dto: CreateTaskInputDto,
     @Req() req: AuthRequest,
@@ -55,7 +57,6 @@ export class TasksController {
     return this.createTaskUseCase.execute(command);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAllByUserId(
     @Req() req: AuthRequest,
@@ -63,7 +64,6 @@ export class TasksController {
   ): Promise<TaskOutputDto[]> {
     return this.findTasksByUserIdUseCase.execute(query, req.user.userId);
   }
-  @UseGuards(JwtAuthGuard)
   @Patch(':taskId/start-progress')
   async startProgress(
     @Req() req: AuthRequest,
@@ -77,7 +77,6 @@ export class TasksController {
     return this.startTaskProgressUseCase.execute(command);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':taskId/complete')
   async complete(
     @Req() req: AuthRequest,
@@ -91,7 +90,6 @@ export class TasksController {
     return this.completeTaskUseCase.execute(command);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':taskId/reopen')
   async reopen(
     @Req() req: AuthRequest,
@@ -105,7 +103,6 @@ export class TasksController {
     return this.reopenTaskUseCase.execute(command);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':taskId/update-details')
   async updateDetails(
     @Req() req: AuthRequest,
@@ -121,5 +118,19 @@ export class TasksController {
     };
 
     return this.updateTaskDetailsUseCase.execute(command);
+  }
+
+  @Delete(':taskId')
+  @HttpCode(204)
+  async delete(
+    @Req() req: AuthRequest,
+    @Param('taskId', new ParseUUIDPipe()) taskId: string,
+  ): Promise<void> {
+    const command: DeleteTaskCommand = {
+      taskId,
+      userId: req.user.userId,
+    };
+
+    return this.deleteTaskUseCase.execute(command);
   }
 }
