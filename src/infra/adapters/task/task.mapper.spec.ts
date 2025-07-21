@@ -11,7 +11,7 @@ describe('TaskMapper', () => {
 
   describe('toPersistence', () => {
     it('should correctly map a domain Task to a PrismaTask object', () => {
-      const domainTask: Task = {
+      const domainTask = {
         id: 'task-id-123',
         userId: 'user-id-123',
         title: 'Refactor services layer',
@@ -20,7 +20,7 @@ describe('TaskMapper', () => {
         dueDate: new Date('2025-08-01T23:59:59.000Z'),
         createdAt: new Date('2025-07-20T12:00:00.000Z'),
         completedAt: null,
-      };
+      } as Task;
 
       const expectedPrismaTask: PrismaTask = {
         id: 'task-id-123',

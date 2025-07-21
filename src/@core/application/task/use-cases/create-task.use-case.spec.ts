@@ -1,12 +1,8 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { CreateTaskUseCase } from './create-task.use-case';
 import { CreateTaskCommand } from '../commands/create-task.command';
-import { ITaskRepository, Task } from 'src/@core/domain/task';
-
-const mockTaskRepository: jest.Mocked<ITaskRepository> = {
-  create: jest.fn(),
-  findAllByUserId: jest.fn(),
-};
+import { Task } from 'src/@core/domain/task';
+import { mockTaskRepository } from './task-repository-test-mocks';
 
 jest.mock('src/@core/domain/task/task.entity');
 

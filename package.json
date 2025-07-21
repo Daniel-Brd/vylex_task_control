@@ -81,10 +81,10 @@
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/src/$1"
     },
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "setupFilesAfterEnv": [
-    "reflect-metadata"
-  ]
+      "reflect-metadata"
+    ]
   }
 }
