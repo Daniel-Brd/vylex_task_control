@@ -9,6 +9,8 @@ import {
   Patch,
   Param,
   ParseUUIDPipe,
+  Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateTaskCommand } from 'src/@core/application/task/commands/create-task.command';
@@ -27,6 +29,8 @@ import { FindAllTasksQueryDto } from 'src/@core/contracts/task/find-all-tasks.dt
 import { UpdateTaskDetailsInputDto } from 'src/@core/contracts/task/update-task-details.dto';
 import { TaskOutputDto } from 'src/@core/contracts/task/task-output.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { DeleteTaskCommand } from 'src/@core/application/task/commands/delete-task.command';
+import { DeleteTaskUseCase } from 'src/@core/application/task/use-cases/delete-task.use-case';
 
 @Controller('tasks')
 export class TasksController {
@@ -37,10 +41,12 @@ export class TasksController {
     private readonly completeTaskUseCase: CompleteTaskUseCase,
     private readonly reopenTaskUseCase: ReopenTaskUseCase,
     private readonly updateTaskDetailsUseCase: UpdateTaskDetailsUseCase,
+    private readonly deleteTaskUseCase: DeleteTaskUseCase,
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
+  @HttpCode(201)
   async create(
     @Body() dto: CreateTaskInputDto,
     @Req() req: AuthRequest,
@@ -121,5 +127,20 @@ export class TasksController {
     };
 
     return this.updateTaskDetailsUseCase.execute(command);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':taskId')
+  @HttpCode(204)
+  async delete(
+    @Req() req: AuthRequest,
+    @Param('taskId', new ParseUUIDPipe()) taskId: string,
+  ): Promise<void> {
+    const command: DeleteTaskCommand = {
+      taskId,
+      userId: req.user.userId,
+    };
+
+    return this.deleteTaskUseCase.execute(command);
   }
 }
