@@ -5,6 +5,7 @@ import { AuthModule } from './modules/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { PrismaModule } from './modules/prisma.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
     UsersModule,
     TasksModule,
     AuthModule,
+    PrismaModule,
   ],
   providers: [
     {
