@@ -44,4 +44,8 @@ export class Task {
       completedAt: null,
     });
   }
+
+  static reconstitute(props: Task): Task {
+    return new Task(props);
+  }
 }

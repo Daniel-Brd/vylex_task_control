@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsUUID, IsString, IsNotEmpty, IsDate } from 'class-validator';
 
 export class CreateTaskInputDto {
@@ -10,6 +11,7 @@ export class CreateTaskInputDto {
   description!: string;
 
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   dueDate!: Date;
 }
