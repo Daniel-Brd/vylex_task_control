@@ -1,5 +1,6 @@
 import { FindAllTasksQueryDto } from 'src/@core/contracts/task/find-all-tasks.dto';
-import { ITaskRepository, Task } from 'src/@core/domain/task';
+import { TaskOutputDto } from 'src/@core/contracts/task/task-output.dto';
+import { ITaskRepository } from 'src/@core/domain/task';
 import { TaskFilters } from 'src/@core/domain/task/task-filters.type';
 import { TaskOrderBy } from 'src/@core/domain/task/task-order.type';
 
@@ -9,10 +10,16 @@ export class FindTasksByUserIdUseCase {
   async execute(
     payload: FindAllTasksQueryDto,
     userId: string,
-  ): Promise<Task[]> {
+  ): Promise<TaskOutputDto[]> {
     const filters: TaskFilters | undefined = payload.filters;
     const orderBy: TaskOrderBy | undefined = payload.orderBy;
 
-    return this.taskRepository.findAllByUserId(userId, filters, orderBy);
+    const tasks = await this.taskRepository.findAllByUserId(
+      userId,
+      filters,
+      orderBy,
+    );
+
+    return tasks.map((task) => TaskOutputDto.fromEntity(task));
   }
 }
