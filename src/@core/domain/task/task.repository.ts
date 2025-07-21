@@ -11,4 +11,5 @@ export interface ITaskRepository {
     orderBy?: TaskOrderBy,
   ): Promise<Task[]>;
   update(task: Task): Promise<Task>;
+  delete(taskId: string): Promise<void>;
 }
