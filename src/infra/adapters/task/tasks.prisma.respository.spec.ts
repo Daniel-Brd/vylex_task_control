@@ -18,6 +18,8 @@ const mockPrismaService = {
   task: {
     findMany: jest.fn(),
     create: jest.fn(),
+    findUnique: jest.fn(),
+    update: jest.fn(),
   },
 };
 
@@ -146,6 +148,64 @@ describe('TaskRepository', () => {
       expect(prisma.task.create).toHaveBeenCalledWith({
         data: mockPersistenceData,
       });
+    });
+  });
+
+  describe('findById', () => {
+    it('should return a mapped domain task when a task is found', async () => {
+      const taskId = 'task-id-123';
+      const prismaTask = { id: taskId, title: 'Found Task' };
+      const domainTask = { id: taskId, title: 'Found Task' } as Task;
+
+      (prisma.task.findUnique as jest.Mock).mockResolvedValue(prismaTask);
+      (TaskMapper.toDomain as jest.Mock).mockReturnValue(domainTask);
+
+      const result = await repository.findById(taskId);
+
+      expect(prisma.task.findUnique).toHaveBeenCalledWith({
+        where: { id: taskId },
+      });
+      expect(TaskMapper.toDomain).toHaveBeenCalledWith(prismaTask);
+      expect(result).toBe(domainTask);
+    });
+
+    it('should return null when a task is not found', async () => {
+      const taskId = 'non-existent-id';
+      (prisma.task.findUnique as jest.Mock).mockResolvedValue(null);
+
+      const result = await repository.findById(taskId);
+
+      expect(prisma.task.findUnique).toHaveBeenCalledWith({
+        where: { id: taskId },
+      });
+      expect(TaskMapper.toDomain).not.toHaveBeenCalled();
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('update', () => {
+    it('should correctly map, update, and remap a task', async () => {
+      const domainTaskToUpdate = {
+        id: 'task-id-123',
+        status: 'COMPLETED',
+      } as Task;
+      const persistenceData = { id: 'task-id-123', status: 'COMPLETED' };
+      const updatedPrismaTask = { ...persistenceData };
+      const finalDomainTask = { ...domainTaskToUpdate } as Task;
+
+      (TaskMapper.toPersistence as jest.Mock).mockReturnValue(persistenceData);
+      (prisma.task.update as jest.Mock).mockResolvedValue(updatedPrismaTask);
+      (TaskMapper.toDomain as jest.Mock).mockReturnValue(finalDomainTask);
+
+      const result = await repository.update(domainTaskToUpdate);
+
+      expect(TaskMapper.toPersistence).toHaveBeenCalledWith(domainTaskToUpdate);
+      expect(prisma.task.update).toHaveBeenCalledWith({
+        where: { id: domainTaskToUpdate.id },
+        data: persistenceData,
+      });
+      expect(TaskMapper.toDomain).toHaveBeenCalledWith(updatedPrismaTask);
+      expect(result).toBe(finalDomainTask);
     });
   });
 });
