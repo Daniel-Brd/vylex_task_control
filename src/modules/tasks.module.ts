@@ -9,6 +9,7 @@ import { StartTaskProgressUseCase } from 'src/@core/application/task/use-cases/s
 import { CompleteTaskUseCase } from 'src/@core/application/task/use-cases/complete-task.use-case';
 import { ReopenTaskUseCase } from 'src/@core/application/task/use-cases/reopen-task.use-case';
 import { UpdateTaskDetailsUseCase } from 'src/@core/application/task/use-cases/update-task-details.use-case';
+import { DeleteTaskUseCase } from 'src/@core/application/task/use-cases/delete-task.use-case';
 
 @Module({
   controllers: [TasksController],
@@ -49,6 +50,12 @@ import { UpdateTaskDetailsUseCase } from 'src/@core/application/task/use-cases/u
       provide: UpdateTaskDetailsUseCase,
       useFactory: (taskRepository: ITaskRepository) =>
         new UpdateTaskDetailsUseCase(taskRepository),
+      inject: ['ITaskRepository'],
+    },
+    {
+      provide: DeleteTaskUseCase,
+      useFactory: (taskRepository: ITaskRepository) =>
+        new DeleteTaskUseCase(taskRepository),
       inject: ['ITaskRepository'],
     },
   ],
