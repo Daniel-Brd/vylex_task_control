@@ -3,7 +3,6 @@ import { TasksController } from '../infra/controllers/tasks.controller';
 import { CreateTaskUseCase } from 'src/@core/application/task/use-cases/create-task.use-case';
 import { ITaskRepository } from 'src/@core/domain/task';
 import { TaskRepository } from 'src/infra/adapters/task/tasks.prisma.respository';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { FindTasksByUserIdUseCase } from 'src/@core/application/task/use-cases/find-all-task.use-case';
 import { StartTaskProgressUseCase } from 'src/@core/application/task/use-cases/start-task-progress.use-case';
 import { CompleteTaskUseCase } from 'src/@core/application/task/use-cases/complete-task.use-case';
@@ -14,7 +13,6 @@ import { DeleteTaskUseCase } from 'src/@core/application/task/use-cases/delete-t
 @Module({
   controllers: [TasksController],
   providers: [
-    PrismaService,
     { provide: 'ITaskRepository', useClass: TaskRepository },
     {
       provide: CreateTaskUseCase,
