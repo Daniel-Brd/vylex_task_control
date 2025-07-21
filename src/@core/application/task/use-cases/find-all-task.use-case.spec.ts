@@ -102,4 +102,31 @@ describe('FindTasksByUserIdUseCase', () => {
       },
     );
   });
+
+  it('should return the array of tasks from the repository', async () => {
+    const payload: FindAllTasksQueryDto = {};
+    const userId = 'user-id-123';
+
+    const mockTasksResult: Partial<Task>[] = [
+      { id: 'task-id-123', title: 'First Task' },
+      { id: 'task-id-456', title: 'Second Task' },
+    ];
+
+    mockTaskRepository.findAllByUserId.mockResolvedValue(
+      mockTasksResult as Task[],
+    );
+
+    const result = await useCase.execute(payload, userId);
+
+    expect(result).toBe(mockTasksResult);
+    expect(result).toHaveLength(2);
+    expect(result[0].title).toBe('First Task');
+
+    expect(mockTaskRepository.findAllByUserId).toHaveBeenCalledWith(
+      userId,
+      undefined,
+      undefined,
+    );
+    expect(mockTaskRepository.findAllByUserId).toHaveBeenCalledTimes(1);
+  });
 });
