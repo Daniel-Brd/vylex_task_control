@@ -5,4 +5,5 @@ export const mockTaskRepository: jest.Mocked<ITaskRepository> = {
   create: jest.fn(),
   findAllByUserId: jest.fn(),
   update: jest.fn(),
+  delete: jest.fn(),
 };
