@@ -20,9 +20,9 @@ const mockPrismaService = {
     create: jest.fn(),
     findUnique: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
   },
 };
-
 class TestableTaskRepository extends TaskRepository {
   public createWhereConditions(filters: TaskFilters): Prisma.TaskWhereInput {
     return super.createWhereConditions(filters);
@@ -206,6 +206,20 @@ describe('TaskRepository', () => {
       });
       expect(TaskMapper.toDomain).toHaveBeenCalledWith(updatedPrismaTask);
       expect(result).toBe(finalDomainTask);
+    });
+  });
+
+  describe('delete', () => {
+    it('should call prisma.delete with the correct taskId', async () => {
+      const taskId = 'task-id-123';
+      (prisma.task.delete as jest.Mock).mockResolvedValue(undefined);
+
+      await repository.delete(taskId);
+
+      expect(prisma.task.delete).toHaveBeenCalledTimes(1);
+      expect(prisma.task.delete).toHaveBeenCalledWith({
+        where: { id: taskId },
+      });
     });
   });
 });
