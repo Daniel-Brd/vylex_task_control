@@ -8,6 +8,7 @@ import { FindTasksByUserIdUseCase } from 'src/@core/application/task/use-cases/f
 import { StartTaskProgressUseCase } from 'src/@core/application/task/use-cases/start-task-progress.use-case';
 import { CompleteTaskUseCase } from 'src/@core/application/task/use-cases/complete-task.use-case';
 import { ReopenTaskUseCase } from 'src/@core/application/task/use-cases/reopen-task.use-case';
+import { UpdateTaskDetailsUseCase } from 'src/@core/application/task/use-cases/update-task-details.use-case';
 
 @Module({
   controllers: [TasksController],
@@ -42,6 +43,12 @@ import { ReopenTaskUseCase } from 'src/@core/application/task/use-cases/reopen-t
       provide: ReopenTaskUseCase,
       useFactory: (taskRepository: ITaskRepository) =>
         new ReopenTaskUseCase(taskRepository),
+      inject: ['ITaskRepository'],
+    },
+    {
+      provide: UpdateTaskDetailsUseCase,
+      useFactory: (taskRepository: ITaskRepository) =>
+        new UpdateTaskDetailsUseCase(taskRepository),
       inject: ['ITaskRepository'],
     },
   ],
