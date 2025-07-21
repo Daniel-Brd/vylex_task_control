@@ -14,4 +14,17 @@ export class UserMapper {
 
     return data;
   }
+
+  public static toDomain(prismaUser: PrismaUser): User {
+    const user = User.reconstitute({
+      id: prismaUser.id,
+      name: prismaUser.name,
+      email: prismaUser.email,
+      password: prismaUser.password,
+      createdAt: prismaUser.createdAt,
+      updatedAt: prismaUser.updatedAt,
+    });
+
+    return user;
+  }
 }

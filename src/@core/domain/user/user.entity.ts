@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { IPasswordHasher } from '../auth/password-hasher.port';
 
 export class User {
   public readonly id: string;
@@ -17,18 +18,26 @@ export class User {
     this.updatedAt = props.updatedAt;
   }
 
-  static create(props: {
-    name: string;
-    email: string;
-    password: string;
-  }): User {
+  static async create(
+    props: {
+      name: string;
+      email: string;
+      password: string;
+    },
+    hasher: IPasswordHasher,
+  ): Promise<User> {
+    const hashedPassword = await hasher.hash(props.password);
     return new User({
       id: randomUUID(),
       name: props.name,
       email: props.email,
-      password: props.password,
+      password: hashedPassword,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
+  }
+
+  static reconstitute(props: User): User {
+    return new User(props);
   }
 }
