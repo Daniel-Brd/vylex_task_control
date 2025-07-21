@@ -46,14 +46,9 @@ describe('UserMapper', () => {
         updatedAt: new Date('2025-02-02T00:00:00.000Z'),
       };
 
-      const mockDomainUser: User = {
+      const mockDomainUser = {
         id: 'user-id-456',
-        name: 'John Doe D',
-        email: 'john.doe.D@example.com',
-        password: 'hashed_password',
-        createdAt: new Date('2025-07-20T12:00:00.000Z'),
-        updatedAt: new Date('2025-07-21T10:00:00.000Z'),
-      };
+      } as User;
 
       const reconstituteSpy = jest
         .spyOn(User, 'reconstitute')
