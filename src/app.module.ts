@@ -3,6 +3,8 @@ import { UsersModule } from './modules/users.module';
 import { TasksModule } from './modules/tasks.module';
 import { AuthModule } from './modules/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -13,6 +15,12 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     TasksModule,
     AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}
