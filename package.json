@@ -82,6 +82,9 @@
       "^src/(.*)$": "<rootDir>/src/$1"
     },
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+    "reflect-metadata"
+  ]
   }
 }
