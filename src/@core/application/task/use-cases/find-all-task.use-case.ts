@@ -10,20 +10,8 @@ export class FindTasksByUserIdUseCase {
     payload: FindAllTasksQueryDto,
     userId: string,
   ): Promise<Task[]> {
-    const filters: TaskFilters = {
-      status: payload.filters?.status,
-    };
-
-    let orderBy: TaskOrderBy | undefined;
-
-    if (payload.orderBy) {
-      const { sortBy, sortOrder, nulls } = payload.orderBy;
-      orderBy = {
-        nulls,
-        sortBy,
-        sortOrder,
-      };
-    }
+    const filters: TaskFilters | undefined = payload.filters;
+    const orderBy: TaskOrderBy | undefined = payload.orderBy;
 
     return this.taskRepository.findAllByUserId(userId, filters, orderBy);
   }
