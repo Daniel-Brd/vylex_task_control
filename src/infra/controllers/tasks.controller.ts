@@ -26,7 +26,6 @@ import {
 import { FindAllTasksQueryDto } from 'src/@core/contracts/task/find-all-tasks.dto';
 import { UpdateTaskDetailsInputDto } from 'src/@core/contracts/task/update-task-details.dto';
 import { TaskOutputDto } from 'src/@core/contracts/task/task-output.dto';
-import { Task } from 'src/@core/domain/task';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Controller('tasks')
