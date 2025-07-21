@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
-  ITaskRepository,
   Task,
   TaskStatus,
   SortBy,
@@ -9,11 +8,7 @@ import {
 } from 'src/@core/domain/task';
 import { FindTasksByUserIdUseCase } from './find-all-task.use-case';
 import { FindAllTasksQueryDto } from 'src/@core/contracts/task/find-all-tasks.dto';
-
-const mockTaskRepository: jest.Mocked<ITaskRepository> = {
-  findAllByUserId: jest.fn(),
-  create: jest.fn(),
-};
+import { mockTaskRepository } from './task-repository-test-mocks';
 
 describe('FindTasksByUserIdUseCase', () => {
   let useCase: FindTasksByUserIdUseCase;
