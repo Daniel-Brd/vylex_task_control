@@ -1,0 +1,11 @@
+services:
+  web:
+    container_name: task_control_web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    env_file:
+      - .env
+    restart: unless-stopped
