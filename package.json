@@ -11,6 +11,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "build:container": "docker build -t task_control_api .",
     "lint:check": "eslint \"{src,apps,libs,test}/**/*.ts\" && prettier --check \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "prettier --write \"{src,apps,libs,test}/**/*.ts\" && eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
