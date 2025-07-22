@@ -19,5 +19,7 @@ async function bootstrap() {
   app.useGlobalFilters(new DomainExceptionFilter());
 
   await app.listen(process.env.PORT ?? 3000);
+
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
