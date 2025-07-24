@@ -3,6 +3,7 @@ import { apiClient } from '@/shared/api';
 import type { CreateTaskInputDto, CreateTaskOutputDto, GetTaskInputDto, GetTaskOutputDto, UpdateTaskInputDto } from '.';
 import { mapTaskOutputDtoToTask } from './';
 import type { Task } from '../model/types';
+import { useAuth } from '@/entities/session';
 
 const taskKeys = {
   all: ['tasks'] as const,
@@ -13,6 +14,8 @@ const taskKeys = {
 };
 
 export const useGetTasks = (params: GetTaskInputDto) => {
+  const { userId } = useAuth();
+
   return useQuery<GetTaskOutputDto[], Error, Task[]>({
     queryKey: taskKeys.list(params),
     queryFn: async () => {
@@ -21,7 +24,7 @@ export const useGetTasks = (params: GetTaskInputDto) => {
       });
       return data;
     },
-    select: (data) => data.map(mapTaskOutputDtoToTask),
+    select: (data) => data.map((data) => mapTaskOutputDtoToTask(data, userId)),
   });
 };
 
