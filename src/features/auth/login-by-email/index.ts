@@ -1,1 +1,2 @@
-export { LoginByEmailForm } from './ui/login-by-email-form';
+export { LoginByEmailForm } from './ui';
+export { type LoginByEmailFormValues } from './model';
