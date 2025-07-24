@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Link } from 'react-router';
 import { Button, Input, Label } from '@/shared/ui';
 import { loginByEmailSchema, type LoginByEmailFormValues } from '../model/schemas';
 import { useAuthUser } from '@/entities/user/api/user-api';
@@ -8,13 +9,14 @@ interface LoginByEmailFormProps {
   onSuccess: (token: string) => void;
   onError: (error: string) => void;
 }
+
 export function LoginByEmailForm({ onError, onSuccess }: LoginByEmailFormProps) {
   const authUserMutation = useAuthUser();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginByEmailFormValues>({
     resolver: zodResolver(loginByEmailSchema),
   });
@@ -43,16 +45,16 @@ export function LoginByEmailForm({ onError, onSuccess }: LoginByEmailFormProps) 
           {errors.password && <small className="text-sm text-red-500">{errors.password.message}</small>}
         </div>
         <div className="flex flex-col gap-3">
-          <Button type="submit" className="w-full">
-            Entrar
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? 'Entrando...' : 'Entrar'}
           </Button>
         </div>
       </div>
       <div className="mt-4 text-center text-sm">
         Não possui uma conta?{' '}
-        <a href="#" className="underline underline-offset-4">
+        <Link to="/register" className="underline underline-offset-4 hover:text-primary transition-colors">
           Cadastrar
-        </a>
+        </Link>
       </div>
     </form>
   );
