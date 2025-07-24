@@ -9,9 +9,11 @@ export const apiClient = axios.create({
   },
 });
 
+export const ACCESS_TOKEN_KEY = 'access_token';
+
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -34,6 +36,8 @@ apiClient.interceptors.response.use(
       switch (status) {
         case 401:
           console.error('Unauthorized. Redirecting to login...');
+          localStorage.removeItem(ACCESS_TOKEN_KEY);
+          window.location.href = '/login';
           break;
         case 403:
           console.error('Forbidden access.');
