@@ -9,6 +9,7 @@ import { Button, Calendar, Input, Label, Popover, PopoverContent, PopoverTrigger
 
 import type { CreateTaskInputDto } from '@/entities/task/api';
 import { createTaskSchema, type CreateTaskFormData } from '../model';
+import { useMemo } from 'react';
 
 interface CreateTaskFormProps {
   onSubmit: (data: CreateTaskInputDto) => void;
@@ -16,7 +17,7 @@ interface CreateTaskFormProps {
   isLoading?: boolean;
 }
 
-export function TaskForm({ onSubmit, onCancel, isLoading = false }: CreateTaskFormProps) {
+export function CreateTaskForm({ onSubmit, onCancel, isLoading = false }: CreateTaskFormProps) {
   const {
     register,
     handleSubmit,
@@ -27,6 +28,8 @@ export function TaskForm({ onSubmit, onCancel, isLoading = false }: CreateTaskFo
     resolver: zodResolver(createTaskSchema),
     mode: 'onChange',
   });
+
+  const hasErrors = useMemo(() => !!Object.keys(errors).length, [errors]);
 
   const handleFormSubmit = (data: CreateTaskFormData) => {
     onSubmit(data);
@@ -107,7 +110,7 @@ export function TaskForm({ onSubmit, onCancel, isLoading = false }: CreateTaskFo
         <Button type="button" variant="outline" onClick={handleCancel} disabled={isLoading} className="flex-1">
           Cancelar
         </Button>
-        <Button type="submit" disabled={isLoading} className="flex-1">
+        <Button type="submit" disabled={hasErrors || isLoading} className="flex-1">
           {isLoading ? 'Criando...' : 'Criar Tarefa'}
         </Button>
       </div>

@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/shared/ui';
 
 import type { CreateTaskInputDto } from '@/entities/task/api';
-import { TaskForm } from '@/features/create-task/ui';
+import { CreateTaskForm } from '@/features/create-task/ui';
 import { useCreateTask } from '@/entities/task/api/task-api';
 
 interface CreateTaskDialogProps {
@@ -35,7 +35,7 @@ export function CreateTaskDialog({ open, onOpenChange, onTaskCreated }: CreateTa
           <DialogDescription>Adicione uma nova tarefa à sua lista. Preencha os detalhes abaixo.</DialogDescription>
         </DialogHeader>
 
-        <TaskForm onSubmit={(data) => void handleSubmit(data)} onCancel={handleCancel} isLoading={isPending} />
+        <CreateTaskForm onSubmit={(data) => void handleSubmit(data)} onCancel={handleCancel} isLoading={isPending} />
       </DialogContent>
     </Dialog>
   );
