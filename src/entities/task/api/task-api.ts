@@ -42,11 +42,14 @@ export const useCreateTask = () => {
 };
 
 export const useUpdateTaskDetails = () => {
+  const { userId } = useAuth();
+
   const queryClient = useQueryClient();
-  return useMutation<GetTaskOutputDto, Error, { taskId: string; payload: UpdateTaskInputDto }>({
+
+  return useMutation<Task, Error, { taskId: string; payload: UpdateTaskInputDto }>({
     mutationFn: async ({ taskId, payload }) => {
       const { data } = await apiClient.patch<GetTaskOutputDto>(`/tasks/${taskId}/update-details`, payload);
-      return data;
+      return mapTaskOutputDtoToTask(data, userId);
     },
     onSuccess: async (data) => {
       await Promise.all([queryClient.invalidateQueries({ queryKey: taskKeys.lists() }), queryClient.invalidateQueries({ queryKey: taskKeys.detail(data.id) })]);
