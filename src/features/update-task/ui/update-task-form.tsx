@@ -14,7 +14,7 @@ import { useMemo } from 'react';
 
 interface UpdateTaskFormProps {
   task: Task;
-  onSubmit: (data: UpdateTaskInputDto) => void;
+  onSubmit: (data: UpdateTaskInputDto) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
 }
@@ -37,7 +37,7 @@ export function UpdateTaskForm({ task, onSubmit, onCancel, isLoading = false }: 
 
   const hasErrors = useMemo(() => !!Object.keys(errors).length, [errors]);
 
-  const handleFormSubmit = (data: UpdateTaskFormData) => {
+  const handleFormSubmit = async (data: UpdateTaskFormData) => {
     const changedFields: Partial<UpdateTaskFormData> = {};
 
     if (dirtyFields.title) {
@@ -51,7 +51,7 @@ export function UpdateTaskForm({ task, onSubmit, onCancel, isLoading = false }: 
     if (dirtyFields.dueDate) {
       changedFields.dueDate = data.dueDate;
     }
-    onSubmit(changedFields);
+    await onSubmit(changedFields);
   };
 
   return (
