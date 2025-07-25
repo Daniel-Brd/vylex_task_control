@@ -12,7 +12,7 @@ export function TaskList({ selectedTask, onTaskClick }: TaskListProps) {
   const tasks = useGetTasks({}).data;
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4 p-4 items-center">
       {tasks?.map((task) => (
         <TaskCard
           key={task.id}

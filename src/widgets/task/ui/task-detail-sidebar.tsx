@@ -7,19 +7,18 @@ import { useReopenTask } from '@/entities/task/api/task-api';
 import { formatDateTime } from '@/shared/lib/utils';
 import { StatusSelector } from '@/features/update-task-status';
 import { toast } from 'sonner';
+import { DeleteTaskDialog } from '@/features/delete-task';
 
 export interface TaskDetailsSidebarProps {
   task: Task;
   show: boolean;
   onOpenChange: (open: boolean) => void;
-  onTaskUpdate?: (updatedTask: Partial<Task>) => void; // Callback para atualizar a tarefa no componente pai
+  onTaskUpdate?: (updatedTask: Partial<Task>) => void;
 }
 
 export function TaskDetailsSidebar(props: TaskDetailsSidebarProps) {
   const [showEditDialog, setShowEditDialog] = useState(false);
-  //IN WORK
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [currentTask, setCurrentTask] = useState<Task>(props.task);
 
   const toggleDeleteDialog = () => {
@@ -51,6 +50,10 @@ export function TaskDetailsSidebar(props: TaskDetailsSidebarProps) {
     props.onTaskUpdate?.(updatedTask);
   };
 
+  const handleTaskDeletion = () => {
+    onOpenChange(false);
+  };
+
   if (!currentTask) return null;
 
   return (
@@ -71,11 +74,11 @@ export function TaskDetailsSidebar(props: TaskDetailsSidebarProps) {
                 <div className="flex gap-2">
                   <Button variant="outline" onClick={() => setShowEditDialog(true)} className="flex-1">
                     <Edit className="w-4 h-4 mr-2" />
-                    Edit
+                    Editar
                   </Button>
                   <Button variant="outline" onClick={toggleDeleteDialog} className="text-destructive hover:text-destructive">
                     <Trash2 className="w-4 h-4 mr-2" />
-                    Delete
+                    Excluir
                   </Button>
                 </div>
 
@@ -143,7 +146,13 @@ export function TaskDetailsSidebar(props: TaskDetailsSidebarProps) {
         </SheetContent>
       </Sheet>
       <UpdateTaskDialog task={currentTask} show={showEditDialog} setShow={setShowEditDialog} />
-      {/* <DeleteTaskDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog} onConfirm={handleDelete} taskTitle={currentTask.title} /> */}
+      <DeleteTaskDialog
+        show={showDeleteDialog}
+        setShow={setShowDeleteDialog}
+        taskId={currentTask.id}
+        taskTitle={currentTask.title}
+        onSuccess={handleTaskDeletion}
+      />
     </>
   );
 }

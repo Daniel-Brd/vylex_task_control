@@ -131,14 +131,20 @@ export const useReopenTask = (options?: { onSuccess?: (data: GetTaskOutputDto) =
   });
 };
 
-export const useDeleteTask = () => {
+export const useDeleteTask = (options?: { onSuccess?: () => void; onError?: (error: Error) => void }) => {
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: async (taskId) => {
-      await apiClient.delete(`/tasks/${taskId}/delete`);
+      await apiClient.delete(`/tasks/${taskId}`);
     },
     onSuccess: async () => {
+      toast.success('Tarefa apagada com sucesso!');
       await queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
+      options?.onSuccess?.();
+    },
+    onError: (error) => {
+      handleApiError(error, TASK_ERROR_MESSAGES);
+      options?.onError?.(error);
     },
   });
 };
