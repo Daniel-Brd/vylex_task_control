@@ -38,7 +38,7 @@ export function DeleteTaskDialog({ show, setShow, taskId, taskTitle, onSuccess }
     <AlertDialog open={show} onOpenChange={setShow}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
+          <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
           <AlertDialogDescription>
             Esta ação não pode ser desfeita. Isso excluirá permanentemente a tarefa <span className="font-semibold text-foreground">"{taskTitle}"</span>.
           </AlertDialogDescription>
