@@ -1,5 +1,4 @@
-import axios, { type InternalAxiosRequestConfig, isAxiosError, type AxiosError } from 'axios';
-import { toast } from 'sonner';
+import axios, { type InternalAxiosRequestConfig, isAxiosError } from 'axios';
 
 const API_URL = (import.meta.env.VITE_API_URL as string) || '/api';
 
@@ -27,22 +26,6 @@ apiClient.interceptors.request.use(
   },
 );
 
-apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error: AxiosError | Error) => {
-    if (isAxiosError(error) && error.response?.status === 401) {
-      toast.error('Sessão expirada. Redirecionando para a página de login.');
-
-      localStorage.removeItem(ACCESS_TOKEN_KEY);
-
-      setTimeout(() => {
-        window.location.href = '/login';
-      }, 5000);
-
-      return new Promise(() => {});
-    }
-    return Promise.reject(error);
-  },
-);
+apiClient.interceptors.response.use((response) => {
+  return response;
+});

@@ -33,8 +33,8 @@ export const useLoginByEmail = (options?: { onSuccess?: (data: AuthToken) => voi
     onSuccess: async (data) => {
       toast.success('Login realizado com sucesso!');
 
-      await queryClient.invalidateQueries();
       options?.onSuccess?.(data);
+      await queryClient.invalidateQueries();
     },
     onError: (error) => {
       handleApiError(error, USER_ERROR_MESSAGES);
