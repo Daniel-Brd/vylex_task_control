@@ -1,16 +1,15 @@
 import type { TaskStatus } from '../../model/types';
 
-type SortOrder = 'asc' | 'desc';
-
 type NullsOrder = 'first' | 'last';
 
+type SortOrder = 'asc' | 'desc';
 type SortBy = 'createdAt' | 'completedAt' | 'dueDate' | 'status' | 'title' | 'description';
 
-type GetTasksFilters = {
+export type GetTasksFilters = {
   status?: TaskStatus;
 };
 
-type GetTasksOrderBy = {
+export type GetTasksOrderBy = {
   sortBy: SortBy;
   sortOrder: SortOrder;
   nulls?: NullsOrder;
