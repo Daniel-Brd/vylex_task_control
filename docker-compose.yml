@@ -1,0 +1,55 @@
+services:
+  web:
+    container_name: task_control_web
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    environment:
+      - API_URL=/api
+    restart: unless-stopped
+
+  api:
+    container_name: task_control_api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - JWT_SECRET=jwt_secret
+      - JWT_EXPIRATION=8h
+      - DATABASE_URL="mysql://user:task_password@db:3306/task_db"
+    volumes:
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    container_name: task_app_mysql_db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=task_db
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=task_password
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
+
