@@ -15,8 +15,8 @@ export function Header({ onClickCreateTask, onClickLogout }: HeaderProps) {
           <div className="flex items-center space-x-6">
             <Separator orientation="vertical" className="h-6 hidden sm:block" />
             <div className="hidden sm:block">
-              <h1 className="text-xl font-semibold text-gray-900">Tasks</h1>
-              <p className="text-sm text-gray-500">Manage your daily tasks</p>
+              <h1 className="text-xl font-semibold text-gray-900">Tarefas</h1>
+              <p className="text-sm text-gray-500">Gerencie suas tarefas diárias</p>
             </div>
           </div>
 
