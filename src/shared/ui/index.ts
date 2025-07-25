@@ -44,4 +44,5 @@ export {
   DialogTitle,
   DialogTrigger,
 } from './dialog';
+export { Sheet, SheetClose, SheetContent, SheetHeader, SheetDescription, SheetFooter, SheetTrigger, SheetTitle } from './sheet';
 export { Toaster } from './sonner';
