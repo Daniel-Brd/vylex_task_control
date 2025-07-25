@@ -1,15 +1,25 @@
-name: Code Quality Checks
+name: "API: Run Unit Tests"
 
 on:
   push:
     branches: [main]
+    paths:
+      - "api/**"
+      - ".github/workflows/api-test.yaml"
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "api/**"
+      - ".github/workflows/api-test.yaml"
 
 jobs:
-  quality:
-    name: Lint, Format & Type Check
+  run-unit-tests:
+    name: Unit Tests
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./api
 
     steps:
       - name: Checkout code
@@ -24,14 +34,15 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.12
-          cache: 'pnpm'
+          node-version: 20.17
+          cache: "pnpm"
+          cache-dependency-path: "api/pnpm-lock.yaml"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint Check
-        run: pnpm lint:check
+      - name: Prisma Generate
+        run: pnpm prisma generate
 
-      - name: TypeScript Check
-        run: pnpm tsc --noEmit
+      - name: Run tests
+        run: pnpm test
