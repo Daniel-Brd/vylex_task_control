@@ -7,7 +7,7 @@ interface CreateTaskButtonProps extends ButtonVariantProps {
   showText?: boolean;
 }
 
-export function UpdateTaskButton({ onClick, variant = 'default', size = 'sm', showText = true }: CreateTaskButtonProps) {
+export function UpdateTaskButton({ onClick, variant = 'default', size = 'lg', showText = true }: CreateTaskButtonProps) {
   return (
     <Button onClick={onClick} variant={variant} size={size}>
       <Plus className="w-4 h-4" />

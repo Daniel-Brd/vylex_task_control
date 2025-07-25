@@ -23,7 +23,7 @@ export function TaskCard(props: TaskCardProps) {
   return (
     <Card
       className={cn(
-        'cursor-pointer transition-all duration-200 hover:shadow-md border',
+        'cursor-pointer transition-all duration-200 hover:shadow-md border max-w-300 w-full',
         isSelected && 'ring-2 ring-blue-500 shadow-md',
         status === 'COMPLETED' && 'opacity-75',
       )}
