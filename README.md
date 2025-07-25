@@ -107,7 +107,7 @@ Este método orquestra todos os serviços necessários (backend, frontend e banc
 
 4.  **Acesse a Aplicação:**
 
-      - **Frontend:** [http://localhost](https://www.google.com/search?q=http://localhost)
+      - **Frontend:** [http://localhost](http://localhost)
 
 5.  **Usuário de Demonstração:**
     O banco de dados já vem populado com um usuário de exemplo. Você pode acessá-lo com as seguintes credenciais:
