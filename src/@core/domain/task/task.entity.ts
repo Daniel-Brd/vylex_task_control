@@ -81,12 +81,6 @@ export class Task {
   }
 
   public reopen(): void {
-    if (this.status !== TaskStatus.COMPLETED) {
-      throw new DomainRuleError(
-        'Only a completed task can be reopened.',
-        CLIENT_ERROR_CODE.NOT_COMPLETED,
-      );
-    }
     this.status = TaskStatus.PENDING;
     this.completedAt = null;
   }
