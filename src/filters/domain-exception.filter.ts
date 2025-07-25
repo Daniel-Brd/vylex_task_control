@@ -25,6 +25,7 @@ export class DomainExceptionFilter implements ExceptionFilter {
     [CLIENT_ERROR_CODE.NOT_COMPLETED]: HttpStatus.BAD_REQUEST,
     [CLIENT_ERROR_CODE.ALREADY_COMPLETED]: HttpStatus.BAD_REQUEST,
     [CLIENT_ERROR_CODE.IS_NOT_OWNER]: HttpStatus.FORBIDDEN,
+    [CLIENT_ERROR_CODE.EMAIL_ALREADY_EXISTS]: HttpStatus.CONFLICT,
   };
 
   catch(exception: DomainError, host: ArgumentsHost) {

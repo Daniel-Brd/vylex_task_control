@@ -7,6 +7,7 @@ export enum CLIENT_ERROR_CODE {
   NOT_COMPLETED = 'NOT_COMPLETED',
   ALREADY_COMPLETED = 'ALREADY_COMPLETED',
   IS_NOT_OWNER = 'IS_NOT_OWNER',
+  EMAIL_ALREADY_EXISTS = 'EMAIL_ALREADY_EXISTS',
 }
 
 export class DomainError extends Error {
@@ -57,5 +58,15 @@ export class UnauthorizedError extends DomainError {
   ) {
     super(message, clientErrorCode);
     this.name = 'UnauthorizedError';
+  }
+}
+
+export class EmailAlreadyExistsError extends DomainError {
+  constructor(
+    message: string = 'A User with this email already exists',
+    clientErrorCode: CLIENT_ERROR_CODE = CLIENT_ERROR_CODE.EMAIL_ALREADY_EXISTS,
+  ) {
+    super(message, clientErrorCode);
+    this.name = 'EmailAlreadyExistsError';
   }
 }
