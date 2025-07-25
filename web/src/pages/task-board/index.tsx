@@ -25,12 +25,16 @@ const TaskBoard = () => {
     setShowTaskDetails(false);
   };
 
-  const tasks = useGetTasks({ filters, orderBy }).data;
+  const { data: tasks, isLoading } = useGetTasks({ filters, orderBy });
 
   return (
     <div className="w-full">
       <TaskFilters setFilter={setFilters} setOrderBy={setOrderBy} />
-      {tasks?.length && <TaskList selectedTask={selectedTask} onTaskClick={handleTaskClick} tasks={tasks} />}
+      {tasks?.length && !isLoading ? (
+        <TaskList selectedTask={selectedTask} onTaskClick={handleTaskClick} tasks={tasks} />
+      ) : (
+        <div className="flex justify-center items-center h-full w-full">Crie sua próxima tarefa clicando no botão acima</div>
+      )}
       {selectedTask && <TaskDetailsSidebar show={showTaskDetails} task={selectedTask} onOpenChange={handleSidebarClose} />}
     </div>
   );
