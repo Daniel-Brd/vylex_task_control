@@ -7,44 +7,45 @@ import { useState } from 'react';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
 interface RegisterUserFormProps {
-  onSuccess: (userData: RegisterUserData) => Promise<void>;
-  onError: (error: string) => void;
+  onSuccess: (userData: RegisterUserData) => void;
+
+  onError?: (error: Error) => void;
 }
 
 export function RegisterUserForm({ onSuccess, onError }: RegisterUserFormProps) {
-  const createUserMutation = useCreateUser();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     watch,
+    getValues,
   } = useForm<RegisterUserFormValues>({
     resolver: zodResolver(registerUserSchema),
     mode: 'onBlur',
   });
 
-  const password = watch('password');
+  const createUserMutation = useCreateUser({
+    onSuccess: () => {
+      const data = getValues();
+      onSuccess(data);
+    },
+    onError,
+  });
 
-  const onSubmit = async (data: RegisterUserFormValues) => {
-    try {
-      const userData: RegisterUserData = {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      };
+  const onSubmit = (data: RegisterUserFormValues) => {
+    const userData: RegisterUserData = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    };
 
-      const response = await createUserMutation.mutateAsync(userData);
-      console.log('Usuário criado com sucesso!', response);
-      await onSuccess(userData);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Falha ao criar usuário';
-      console.error('Falha no cadastro:', errorMessage);
-      onError(errorMessage);
-    }
+    createUserMutation.mutate(userData);
   };
+
+  const password = watch('password');
 
   return (
     <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
@@ -99,9 +100,8 @@ export function RegisterUserForm({ onSuccess, onError }: RegisterUserFormProps) 
             </ul>
           </div>
         )}
-
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Cadastrando...' : 'Cadastrar'}
+        <Button type="submit" className="w-full" disabled={createUserMutation.isPending}>
+          {createUserMutation.isPending ? 'Cadastrando...' : 'Cadastrar'}
         </Button>
       </div>
     </form>
