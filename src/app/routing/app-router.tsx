@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Routes, Route } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router';
 import { ProtectedRoute } from './protected-route';
 
 const Login = lazy(() => import('@/pages/login'));
@@ -10,6 +10,7 @@ const Layout = lazy(() => import('@/app/layout/layout'));
 export const AppRouter = () => {
   return (
     <Routes>
+      <Route path="*" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route element={<ProtectedRoute />}>

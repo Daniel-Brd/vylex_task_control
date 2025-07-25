@@ -1,1 +1,1 @@
-export { useAuthUser, useCreateUser, loginByEmail, createUser } from './user-api';
+export { useCreateUser, useLoginByEmail } from './user-api';

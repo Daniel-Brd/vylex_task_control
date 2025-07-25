@@ -10,6 +10,7 @@ export const CLIENT_ERROR_CODE = {
   NOT_COMPLETED: 'NOT_COMPLETED',
   ALREADY_COMPLETED: 'ALREADY_COMPLETED',
   IS_NOT_OWNER: 'IS_NOT_OWNER',
+  EMAIL_ALREADY_EXISTS: 'EMAIL_ALREADY_EXISTS',
 } as const;
 
 const COMMOM_MESSAGES: Record<string, string> = {
@@ -32,5 +33,6 @@ export const handleApiError = (error: unknown, errorMessages: Record<CLIENT_ERRO
   }
   const clientErrorCode = error.response.data.errorCode;
   const errorMessage = errorMessages[clientErrorCode] || COMMOM_MESSAGES.UNEXPECTED;
+
   toast.error(errorMessage);
 };

@@ -1,5 +1,4 @@
 import { useAuth } from '@/entities/session';
-import { Toaster } from '@/shared/ui';
 import { Header } from '@/widgets/header';
 import { CreateTaskDialog } from '@/widgets/header/ui/create-task-dialog';
 import { useState } from 'react';
@@ -22,7 +21,6 @@ const Layout = () => {
     <>
       <CreateTaskDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} />
       <Header onClickLogout={onClickLogout} onClickCreateTask={onClickCreateTask} />
-      <Toaster position="top-center" />
       <Outlet />
     </>
   );
