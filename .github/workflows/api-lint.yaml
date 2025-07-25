@@ -1,15 +1,25 @@
-name: Code Quality Checks
+name: "API: Code Quality Checks"
 
 on:
   push:
     branches: [main]
+    paths:
+      - "api/**"
+      - ".github/workflows/api-lint.yaml"
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "api/**"
+      - ".github/workflows/api-lint.yaml"
 
 jobs:
   quality:
     name: Lint, Format & Type Check
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./api
 
     steps:
       - name: Checkout code
@@ -25,7 +35,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.17
-          cache: 'pnpm'
+          cache: "pnpm"
+          cache-dependency-path: "api/pnpm-lock.yaml"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
