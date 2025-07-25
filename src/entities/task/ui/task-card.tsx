@@ -1,5 +1,3 @@
-'use client';
-
 import { cn } from '@/shared/lib/utils';
 import { Card, CardContent, Badge } from '@/shared/ui';
 import { Calendar, Clock } from 'lucide-react';
@@ -11,15 +9,14 @@ export interface TaskCardProps {
   task: Task;
   isSelected: boolean;
   dueDateStatus: DueDateStatus;
-  onSelectTask: (task: Task) => void;
+  onClick: () => void;
 }
 
 export function TaskCard(props: TaskCardProps) {
-  const { isSelected, onSelectTask, dueDateStatus } = props;
+  const { isSelected, onClick, dueDateStatus } = props;
   const { title, description, dueDate, status, createdAt, completedAt } = props.task;
 
   const statusDetails = STATUS_DETAILS[status];
-
   const dueDateColor = DUE_DATE_COLOR_MAP[dueDateStatus];
   const dueDateText = getDueDateText(dueDateStatus, dueDate, completedAt);
 
@@ -30,9 +27,7 @@ export function TaskCard(props: TaskCardProps) {
         isSelected && 'ring-2 ring-blue-500 shadow-md',
         status === 'COMPLETED' && 'opacity-75',
       )}
-      onClick={() => {
-        onSelectTask(props.task);
-      }}
+      onClick={onClick}
     >
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-2">

@@ -7,34 +7,51 @@ import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 import { Button, Calendar, Input, Label, Popover, PopoverContent, PopoverTrigger, Textarea } from '@/shared/ui';
 
-import type { CreateTaskInputDto } from '@/entities/task/api';
-import { createTaskSchema, type CreateTaskFormData } from '../model';
+import type { UpdateTaskInputDto } from '@/entities/task/api';
+import type { Task } from '@/entities/task/model/types';
+import { updateTaskSchema, type UpdateTaskFormData } from '../model';
+import { useMemo } from 'react';
 
-interface CreateTaskFormProps {
-  onSubmit: (data: CreateTaskInputDto) => void;
+interface UpdateTaskFormProps {
+  task: Task;
+  onSubmit: (data: UpdateTaskInputDto) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
 }
 
-export function TaskForm({ onSubmit, onCancel, isLoading = false }: CreateTaskFormProps) {
+export function UpdateTaskForm({ task, onSubmit, onCancel, isLoading = false }: UpdateTaskFormProps) {
   const {
     register,
     handleSubmit,
     control,
-    reset,
-    formState: { errors },
-  } = useForm<CreateTaskFormData>({
-    resolver: zodResolver(createTaskSchema),
+    formState: { errors, isDirty, dirtyFields },
+  } = useForm<UpdateTaskFormData>({
+    resolver: zodResolver(updateTaskSchema),
+    defaultValues: {
+      title: task.title,
+      description: task.description,
+      dueDate: new Date(task.dueDate),
+    },
     mode: 'onChange',
   });
 
-  const handleFormSubmit = (data: CreateTaskFormData) => {
-    onSubmit(data);
-  };
+  const hasErrors = useMemo(() => !!Object.keys(errors).length, [errors]);
 
-  const handleCancel = () => {
-    reset();
-    onCancel();
+  const handleFormSubmit = async (data: UpdateTaskFormData) => {
+    const changedFields: Partial<UpdateTaskFormData> = {};
+
+    if (dirtyFields.title) {
+      changedFields.title = data.title;
+    }
+
+    if (dirtyFields.description) {
+      changedFields.description = data.description;
+    }
+
+    if (dirtyFields.dueDate) {
+      changedFields.dueDate = data.dueDate;
+    }
+    await onSubmit(changedFields);
   };
 
   return (
@@ -55,13 +72,11 @@ export function TaskForm({ onSubmit, onCancel, isLoading = false }: CreateTaskFo
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="description">
-            Descrição <span className="text-red-500">*</span>
-          </Label>
+          <Label htmlFor="description">Descrição</Label>
           <Textarea
             id="description"
             {...register('description')}
-            placeholder="Digite a descrição da tarefa"
+            placeholder="Digite a descrição da tarefa (opcional)"
             rows={3}
             disabled={isLoading}
             className={cn(errors.description && 'border-red-500')}
@@ -89,12 +104,7 @@ export function TaskForm({ onSubmit, onCancel, isLoading = false }: CreateTaskFo
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-                  />
+                  <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
                 </PopoverContent>
               </Popover>
             )}
@@ -104,11 +114,11 @@ export function TaskForm({ onSubmit, onCancel, isLoading = false }: CreateTaskFo
       </div>
 
       <div className="flex gap-2">
-        <Button type="button" variant="outline" onClick={handleCancel} disabled={isLoading} className="flex-1">
+        <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading} className="flex-1">
           Cancelar
         </Button>
-        <Button type="submit" disabled={isLoading} className="flex-1">
-          {isLoading ? 'Criando...' : 'Criar Tarefa'}
+        <Button type="submit" disabled={hasErrors || isLoading || !isDirty} className="flex-1">
+          {isLoading ? 'Atualizando...' : 'Atualizar Tarefa'}
         </Button>
       </div>
     </form>
