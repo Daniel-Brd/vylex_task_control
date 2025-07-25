@@ -9,7 +9,7 @@ export const STATUS_DETAILS: Record<Task['status'], { label: string; icon: JSX.E
     color: 'bg-gray-100 text-gray-700 border-gray-200',
   },
   IN_PROGRESS: {
-    label: 'Em progresso',
+    label: 'Fazendo',
     icon: <Pause className="h-4 w-4 text-blue-500" />,
     color: 'bg-blue-100 text-blue-700 border-blue-200',
   },

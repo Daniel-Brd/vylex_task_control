@@ -56,7 +56,7 @@ export function StatusSelector({ currentTaskStatus, taskId, onStatusChange }: St
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="PENDING">Pendente</SelectItem>
-        <SelectItem value="IN_PROGRESS">Em Progresso</SelectItem>
+        <SelectItem value="IN_PROGRESS">Fazendo</SelectItem>
         <SelectItem value="COMPLETED">Finalizado</SelectItem>
       </SelectContent>
     </Select>
