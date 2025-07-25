@@ -48,8 +48,8 @@ export const TaskFilters = ({ setFilter, setOrderBy }: TaskFiltersProps) => {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col sm:flex-row gap-4 mb-6 max-w-md">
+    <div className="pt-4 px-4">
+      <div className="flex justify-end justify-self-center gap-4 max-w-300 w-full">
         <Select onValueChange={handleStatusChange}>
           <SelectTrigger className="w-[140px]">
             <Filter className="w-4 h-4 mr-2" />
