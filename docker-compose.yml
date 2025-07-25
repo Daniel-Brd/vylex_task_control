@@ -22,10 +22,7 @@ services:
       - NODE_ENV=production
       - JWT_SECRET=jwt_secret
       - JWT_EXPIRATION=8h
-      - DATABASE_URL="mysql://user:task_password@db:3306/task_db"
-    volumes:
-      - ./api:/usr/src/app
-      - /usr/src/app/node_modules
+      - DATABASE_URL=mysql://user:task_password@db:3306/task_db
     depends_on:
       db:
         condition: service_healthy
@@ -52,4 +49,3 @@ services:
 
 volumes:
   mysql_data:
-
