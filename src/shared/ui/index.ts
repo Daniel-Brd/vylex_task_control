@@ -44,3 +44,4 @@ export {
   DialogTitle,
   DialogTrigger,
 } from './dialog';
+export { Toaster } from './sonner';
