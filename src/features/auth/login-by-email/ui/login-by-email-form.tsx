@@ -1,38 +1,36 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router';
-import { Button, Input, Label } from '@/shared/ui';
-import { loginByEmailSchema, type LoginByEmailFormValues } from '../model/schemas';
-import { useAuthUser } from '@/entities/user/api/user-api';
 import { useState } from 'react';
 import { EyeOffIcon, EyeIcon } from 'lucide-react';
 
+import { Button, Input, Label } from '@/shared/ui';
+import { loginByEmailSchema, type LoginByEmailFormValues } from '../model/schemas';
+import { useLoginByEmail } from '@/entities/user/api/user-api';
+
 interface LoginByEmailFormProps {
   onSuccess: (token: string) => void;
-  onError: (error: string) => void;
 }
 
-export function LoginByEmailForm({ onError, onSuccess }: LoginByEmailFormProps) {
+export function LoginByEmailForm({ onSuccess }: LoginByEmailFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const authUserMutation = useAuthUser();
+  const loginMutation = useLoginByEmail({
+    onSuccess: (data) => {
+      onSuccess(data.accessToken);
+    },
+  });
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginByEmailFormValues>({
     resolver: zodResolver(loginByEmailSchema),
   });
 
-  const onSubmit = async (data: LoginByEmailFormValues) => {
-    try {
-      const { accessToken } = await authUserMutation.mutateAsync(data);
-      onSuccess(accessToken);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Falha no login';
-      onError(errorMessage);
-    }
+  const onSubmit = (data: LoginByEmailFormValues) => {
+    loginMutation.mutate(data);
   };
 
   return (
@@ -59,8 +57,8 @@ export function LoginByEmailForm({ onError, onSuccess }: LoginByEmailFormProps) 
           {errors.password && <small className="text-sm text-red-500">{errors.password.message}</small>}
         </div>
         <div className="flex flex-col gap-3">
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'Entrando...' : 'Entrar'}
+          <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+            {loginMutation.isPending ? 'Entrando...' : 'Entrar'}
           </Button>
         </div>
       </div>

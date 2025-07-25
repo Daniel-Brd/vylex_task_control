@@ -1,4 +1,5 @@
 import axios, { type InternalAxiosRequestConfig, isAxiosError, type AxiosError } from 'axios';
+import { toast } from 'sonner';
 
 const API_URL = (import.meta.env.VITE_API_URL as string) || '/api';
 
@@ -31,27 +32,17 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error: AxiosError | Error) => {
-    if (isAxiosError(error)) {
-      const status = error.response?.status;
-      switch (status) {
-        case 401:
-          console.error('Unauthorized. Redirecting to login...');
-          localStorage.removeItem(ACCESS_TOKEN_KEY);
-          window.location.href = '/login';
-          break;
-        case 403:
-          console.error('Forbidden access.');
-          break;
-        case 500:
-          console.error('Internal server error.');
-          break;
-        default:
-          console.error(`An Axios error occurred: ${status}`);
-      }
-    } else {
-      console.error(`An unexpected error occurred: ${error.message}`);
-    }
+    if (isAxiosError(error) && error.response?.status === 401) {
+      toast.error('Sessão expirada. Redirecionando para a página de login.');
 
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 5000);
+
+      return new Promise(() => {});
+    }
     return Promise.reject(error);
   },
 );

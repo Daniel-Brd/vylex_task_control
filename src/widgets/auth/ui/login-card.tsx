@@ -13,10 +13,6 @@ export function LoginCard({ className, ...props }: React.ComponentProps<'div'>) 
     void navigate('/task-board');
   };
 
-  const handleLoginError = (error: string) => {
-    console.error('Login failed:', error);
-  };
-
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -25,7 +21,7 @@ export function LoginCard({ className, ...props }: React.ComponentProps<'div'>) 
           <CardDescription>Insira seu email abaixo para entrar com sua conta</CardDescription>
         </CardHeader>
         <CardContent>
-          <LoginByEmailForm onError={handleLoginError} onSuccess={handleLoginSuccess} />
+          <LoginByEmailForm onSuccess={handleLoginSuccess} />
         </CardContent>
       </Card>
     </div>
